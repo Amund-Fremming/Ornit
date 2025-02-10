@@ -5,35 +5,40 @@ import { Colors } from "../../constants/Colors";
 interface IMediumButton {
   text: string;
   color: string;
-  inverted: boolean;
   onClick: () => void;
+  inverted?: boolean;
 }
 
-export default function MediumButton(props: IMediumButton) {
+export default function MediumButton({
+  text,
+  color,
+  onClick,
+  inverted = false,
+}: IMediumButton) {
   const getButtonStyles = () => {
-    if (props.inverted) {
+    if (inverted) {
       return {
         ...styles.container,
         backgroundColor: Colors.White,
-        borderColor: props.color,
+        borderColor: color,
         borderWidth: 2,
       };
     } else {
-      return { ...styles.container, backgroundColor: props.color };
+      return { ...styles.container, backgroundColor: color };
     }
   };
 
   const getTextStyles = () => {
-    if (props.inverted) {
-      return { ...styles.text, color: props.color };
+    if (inverted) {
+      return { ...styles.text, color: color };
     } else {
       return { ...styles.text, color: Colors.White };
     }
   };
 
   return (
-    <TouchableOpacity onPress={props.onClick} style={getButtonStyles()}>
-      <Text style={getTextStyles()}>{props.text}</Text>
+    <TouchableOpacity onPress={onClick} style={getButtonStyles()}>
+      <Text style={getTextStyles()}>{text}</Text>
     </TouchableOpacity>
   );
 }

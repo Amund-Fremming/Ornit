@@ -18,37 +18,34 @@ export default function ExampleScreen() {
       <SmallButton
         text="Small"
         color={Colors.Black}
-        inverted={true}
+        inverted
         onClick={() => console.log("Small clicked")}
       />
       <MediumButton
         text="Medium"
         color={Colors.Black}
-        inverted={true}
         onClick={() => console.log("Medium clicked")}
+        inverted
       />
       <BigButton
         text="Big"
         color={Colors.Black}
-        inverted={true}
         onClick={() => console.log("Big clicked")}
+        inverted
       />
       <MediumButton
         text="Info modal"
         color={Colors.Black}
-        inverted={false}
         onClick={() => toggleInfoModal(false, "Info message ...")}
       />
       <MediumButton
         text="Error modal"
         color={Colors.Black}
-        inverted={false}
         onClick={() => toggleInfoModal(true, "Error message ...")}
       />
       <MediumButton
         text="Action modal"
         color={Colors.Black}
-        inverted={false}
         onClick={() =>
           toggleActionModal(
             "Are you sure?",
