@@ -24,8 +24,8 @@ public static class TypeScriptTypeGenerator
 
     private static void WriteToFile(string fileContent)
     {
-        var directory = Directory.GetCurrentDirectory();
-        var newDir = directory + "\\" + Filename;
+        var directory = Path.GetFullPath("../Ornit.Frontend");
+        var newDir = directory + "/" + Filename;
         File.WriteAllText(newDir, fileContent);
     }
 

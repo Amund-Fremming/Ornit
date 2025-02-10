@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
         }
 
         TypeScriptTypeGenerator.Generate();
-        TypeScriptClientGenerator.Generate(options.ClientLogging);
+        TypeScriptClientGenerator.Generate(options.ClientLogging, options.RelativeFolderPath);
 
         return services;
     }

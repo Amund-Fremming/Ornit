@@ -22,6 +22,7 @@ internal class Program
         services.AddTypeScriptSupport(options =>
         {
             options.ClientLogging = false;
+            options.RelativeFolderPath = "../Ornit.Frontend/src/features";
         });
 
         services.ConfigureSwaggerAuthentication();

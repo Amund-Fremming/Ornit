@@ -5,6 +5,7 @@
 services.AddTypeScriptSupport(options =>
 {
     options.ClientLogging = false;
+    options.RelativeFolderPath = "../Ornit.Frontend/src/features";
 });
 ```
 

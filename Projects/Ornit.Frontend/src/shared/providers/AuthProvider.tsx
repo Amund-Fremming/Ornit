@@ -61,7 +61,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setLoggedIn(false);
       await SecureStore.deleteItemAsync(TOKEN_KEY);
-      console.log("Token was deleted!"); // remove
     } catch (error) {
       console.error("Error deleting token:", error);
     }

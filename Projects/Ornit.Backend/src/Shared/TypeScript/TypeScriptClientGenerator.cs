@@ -16,13 +16,15 @@ namespace Ornit.Backend.src.Shared.TypeScript;
 
 public static class TypeScriptClientGenerator
 {
-    private static bool ClientLogging = false;
+    private static bool _clientLogging = false;
+    private static string _relativePath = string.Empty;
 
-    public static void Generate(bool clientLogging)
+    public static void Generate(bool clientLogging, string relativePath)
     {
         try
         {
-            ClientLogging = clientLogging;
+            _clientLogging = clientLogging;
+            _relativePath = relativePath;
 
             var controllerClasses = GetControllerClasses();
             var textClients = controllerClasses
@@ -46,8 +48,9 @@ public static class TypeScriptClientGenerator
     private static void CreatedFile(string controllerName, string content)
     {
         controllerName = controllerName.Replace("Controller", "Api.ts");
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "api", controllerName);
-        Directory.CreateDirectory("api");
+        var fixedPath = Path.GetFullPath(_relativePath);
+        var filePath = Path.Combine(fixedPath, "api", controllerName);
+        Directory.CreateDirectory(string.Concat(fixedPath, "/api"));
         File.WriteAllText(filePath, content);
     }
 
@@ -70,7 +73,7 @@ public static class TypeScriptClientGenerator
             }
 
             var allTypes = string.Join(", ", objects);
-            tsImports.AppendLine($"{allTypes} }} from \"../contenttypes\";" + "\n");
+            tsImports.AppendLine($"{allTypes} }} from \"@/contenttypes\";" + "\n");
             tsImports.Append(tsFunctions);
 
             return tsImports.ToString();
@@ -189,8 +192,8 @@ public static class TypeScriptClientGenerator
         var authorization = needsAuth ? $"Authorization: `Bearer ${{token}}`" : "";
         var body = GetBody(method.GetParameters());
 
-        var returnType = GetReturnType(method);
-        var catchClauseConsoleLog = ClientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : "";
+        // var returnType = GetReturnType(method);
+        var catchClauseConsoleLog = _clientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : "";
 
         return $$"""
 			const {{methodName}} = async ({{typeScriptParams}}) => {
