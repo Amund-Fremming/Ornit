@@ -132,3 +132,4 @@ dist
 # Ignore build output for the backend
 Projects/Ornit.Backend/bin/
 Projects/Ornit.Backend/obj/
+/Projects/Ornit.Backend/.vs
