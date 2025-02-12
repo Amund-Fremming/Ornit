@@ -1,4 +1,4 @@
-const textRegex = /^[A-Za-z]+$/;
+const textRegex = /^[A-ZÆØÅa-zæøå]+$/;
 const numberRegex = /^[0-9]+$/;
 const usernameRegex = /^[A-Za-z0-9]+$/;
 

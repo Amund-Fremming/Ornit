@@ -2,27 +2,31 @@ import { View, Text, Pressable, TextInput } from "react-native";
 import { styles } from "./loginStyles";
 import { Colors } from "@/src/shared/constants/Colors";
 import { useState } from "react";
-import * as SecureStore from "expo-secure-store";
 import { useAuthProvider } from "@/src/shared/providers/AuthProvider";
+import { login } from "@/src/features/api/AuthApi";
+import { Auth0LoginResponse, AuthRequest } from "@/contenttypes";
 
 interface ILogin {
   toggleView: () => void;
 }
 
 export default function Login(props: ILogin) {
-  const { setToken } = useAuthProvider();
+  const { setTokens } = useAuthProvider();
 
-  const handleLogin = () => {
-    setUsername("");
+  const handleLogin = async () => {
+    const request: AuthRequest = {
+      email,
+      password,
+    };
+
+    var response: Auth0LoginResponse = await login(request);
+    setTokens(response);
+
+    setEmail("");
     setPassword("");
-    setToken("");
-    /*
-    throw new Error(
-      "You need to import the login method from the auth client here (Login.tsx)!"
-    );*/
   };
 
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   return (
@@ -32,8 +36,8 @@ export default function Login(props: ILogin) {
         placeholder="Username"
         placeholderTextColor={Colors.Gray}
         style={styles.input}
-        value={username}
-        onChangeText={setUsername}
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         placeholder="Password"

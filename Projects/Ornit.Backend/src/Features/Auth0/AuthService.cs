@@ -65,7 +65,8 @@ namespace Ornit.Backend.src.Features.Auth0
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new Error($"Error registering user.");
+                    var error = await response.Content.ReadAsStringAsync();
+                    return new Error(error);
                 }
 
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -112,7 +113,8 @@ namespace Ornit.Backend.src.Features.Auth0
 
             if (!response.IsSuccessStatusCode)
             {
-                return new Error($"Error while logging in");
+                var error = await response.Content.ReadAsStringAsync();
+                return new Error(error);
             }
 
             var serverResponse = await response.Content.ReadAsStringAsync();
