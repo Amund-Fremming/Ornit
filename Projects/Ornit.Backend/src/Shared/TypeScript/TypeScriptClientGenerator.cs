@@ -196,28 +196,29 @@ public static class TypeScriptClientGenerator
         var catchClauseConsoleLog = _clientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : "";
 
         return $$"""
-			const {{methodName}} = async ({{typeScriptParams}}) => {
-				try {
-					const response = await fetch(`{{endpointBase}}/{{methodUri}}}`, {
-						method: "{{httpVerb}}",
-						headers: {
-							"Content-Type": "application/json",
-							{{authorization}}
-						},
-						{{body}}
-					});
 
-					if (!response.ok) {
-						const errorMessage = await response.json();
-						throw new Error(errorMessage);
-					}
+		export const {{methodName}} = async ({{typeScriptParams}}) => {
+			try {
+				const response = await fetch(`{{endpointBase}}/{{methodUri}}}`, {
+					method: "{{httpVerb}}",
+					headers: {
+						"Content-Type": "application/json",
+						{{authorization}}
+					},
+					{{body}}
+				});
 
-					const data = await response.json();
-					return data;
-				} catch (error) {
-				    {{catchClauseConsoleLog}}
+				if (!response.ok) {
+					const errorMessage = await response.json();
+					throw new Error(errorMessage);
 				}
-			};
+
+				const data = await response.json();
+				return data;
+			} catch (error) {
+				{{catchClauseConsoleLog}}
+			}
+		};
 		""";
     }
 
