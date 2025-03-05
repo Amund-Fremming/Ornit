@@ -12,6 +12,7 @@ namespace Ornit.Backend.src.Shared.TypeScript;
  * TODO
  *
  * - Return some message when 200, 401, 403, 404 and 500 (Result pattern or TanStack)
+ * - Handle get method return type when incomming task
  */
 
 public static class TypeScriptClientGenerator
@@ -227,6 +228,12 @@ public static class TypeScriptClientGenerator
 		};
 		""";
     }
+
+    /* Finnes en case
+     * - param er ActionResult
+     * - og har egen object
+     * - hvis den er wrappet i en taks
+     */
 
     private static string GetReturnType(MethodInfo method, bool onlyCustomClasses)
     {
