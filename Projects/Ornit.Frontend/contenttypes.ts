@@ -20,18 +20,6 @@ export enum TestEnum {
     Two,
     Three,
 }
-export interface TestRecord {
-    testNOOOOWO: string;
-    recordString: string;
-}
-
-export interface TestStruct {
-    p4: string;
-    p1: string;
-    p2: string;
-    p3: string;
-}
-
 export interface Auth0LoginResponse {
     accessToken: string;
     refreshToken: string;

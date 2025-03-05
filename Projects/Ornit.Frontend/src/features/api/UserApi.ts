@@ -17,9 +17,8 @@ export const get = async (param: string, srs: string[], token: string) => {
 			throw new Error(errorMessage);
 		}
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
 		
+	} catch (error) {
+		throw new Error("Get")
 	}
 };

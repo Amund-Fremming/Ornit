@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Ornit.Backend.src.Shared.Abstractions;
 using System.Reflection;
 using System.Text;
 using static Ornit.Backend.src.Shared.TypeScript.TypeScriptCommon;
@@ -11,7 +12,6 @@ namespace Ornit.Backend.src.Shared.TypeScript;
  * TODO
  *
  * - Return some message when 200, 401, 403, 404 and 500 (Result pattern or TanStack)
- * - Client needs to specify the data returned
  */
 
 public static class TypeScriptClientGenerator
@@ -63,8 +63,10 @@ public static class TypeScriptClientGenerator
             var objects = new HashSet<string>();
 
             var tsFunctions = new StringBuilder();
+            var customReturnTypes = new HashSet<string>();
             foreach (var method in methodInfos)
             {
+                customReturnTypes.Add(GetReturnType(method, true));
                 var methodObjects = GetCustomObjects(method.GetParameters());
                 objects.UnionWith(methodObjects);
 
@@ -72,6 +74,7 @@ public static class TypeScriptClientGenerator
                 tsFunctions.AppendLine(clientMethodText);
             }
 
+            objects.UnionWith(customReturnTypes);
             var allTypes = string.Join(", ", objects);
             tsImports.AppendLine($"{allTypes} }} from \"@/contenttypes\";" + "\n");
             tsImports.Append(tsFunctions);
@@ -192,8 +195,12 @@ public static class TypeScriptClientGenerator
         var authorization = needsAuth ? $"Authorization: `Bearer ${{token}}`" : "";
         var body = GetBody(method.GetParameters());
 
-        // var returnType = GetReturnType(method);
-        var catchClauseConsoleLog = _clientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : "";
+        var returnType = GetReturnType(method, false);
+        var returnText = string.IsNullOrEmpty(returnType)
+            ? ""
+            : $"const data : {returnType} = await response.json();\nreturn data;";
+
+        var catchClauseConsoleLog = _clientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : $"throw new Error(\"{method.Name}\")";
 
         return $$"""
 
@@ -213,8 +220,7 @@ public static class TypeScriptClientGenerator
 					throw new Error(errorMessage);
 				}
 
-				const data = await response.json();
-				return data;
+				{{returnText}}
 			} catch (error) {
 				{{catchClauseConsoleLog}}
 			}
@@ -222,9 +228,27 @@ public static class TypeScriptClientGenerator
 		""";
     }
 
-    private static string GetReturnType(MethodInfo method)
+    private static string GetReturnType(MethodInfo method, bool onlyCustomClasses)
     {
-        throw new NotImplementedException("GetReturnType in TypeScriptGenerator is not implemented yet, stupid.");
+        var returnType = method.ReturnType;
+        if (!returnType.IsGenericType)
+        {
+            return string.Empty;
+        }
+
+        var param = returnType.GetGenericArguments()[0];
+        if (param == typeof(IActionResult) || param == typeof(ActionResult))
+        {
+            return string.Empty;
+        }
+
+        if (onlyCustomClasses && !typeof(ITypeScriptModel).IsAssignableFrom(param))
+        {
+            return string.Empty;
+        }
+
+        var tsType = ToTypeScriptType(param);
+        return tsType;
     }
 
     private static string GetBody(ParameterInfo[] parameterInfos)

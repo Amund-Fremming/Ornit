@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Ornit.Backend.src.Features.Auth0;
+using Ornit.Backend.src.Features.User;
 using Ornit.Backend.src.Shared.AppData;
 using Ornit.Backend.src.Shared.Extensions;
+using Ornit.Backend.src.Shared.Image;
 using Ornit.Backend.src.Shared.TypeScript;
 
 internal class Program
@@ -15,9 +18,9 @@ internal class Program
         services.AddLogging();
         services.AddResponseCompression(o => o.EnableForHttps = true);
 
-        services.AddLibraries();
-        services.AddRepositories();
-        services.AddServices();
+        services.AddUserServices();
+        services.AddImageSupport();
+        services.AddAuth0Support();
 
         services.AddTypeScriptSupport(options =>
         {

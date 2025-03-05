@@ -1,71 +1,60 @@
-import { TestEnum } from "@/contenttypes";
-
+import { TestEnum, TestClass } from "@/contenttypes";
 
 export const deletee = async (bodyString: string, testEnum: TestEnum) => {
-	try {
-		const response = await fetch(`api/test/{prm}}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-				
-			},
-			body: JSON.stringify(bodyString),
-		});
+  try {
+    const response = await fetch(`api/test/{prm}}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bodyString),
+    });
 
-		if (!response.ok) {
-			const errorMessage = await response.json();
-			throw new Error(errorMessage);
-		}
+    if (!response.ok) {
+      const errorMessage = await response.json();
+      throw new Error(errorMessage);
+    }
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		
-	}
+    const data: TestClass = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error("Deletee");
+  }
 };
 
 export const patch = async (str: string, token: string) => {
-	try {
-		const response = await fetch(`api/test/patch/${str}}`, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`
-			},
-			
-		});
+  try {
+    const response = await fetch(`api/test/patch/${str}}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-		if (!response.ok) {
-			const errorMessage = await response.json();
-			throw new Error(errorMessage);
-		}
-
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		
-	}
+    if (!response.ok) {
+      const errorMessage = await response.json();
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    throw new Error("Patch");
+  }
 };
 
 export const get = async () => {
-	try {
-		const response = await fetch(`api/test/get/extra/param}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				
-			},
-			
-		});
+  try {
+    const response = await fetch(`api/test/get/extra/param}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-		if (!response.ok) {
-			const errorMessage = await response.json();
-			throw new Error(errorMessage);
-		}
-
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		
-	}
+    if (!response.ok) {
+      const errorMessage = await response.json();
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    throw new Error("Get");
+  }
 };

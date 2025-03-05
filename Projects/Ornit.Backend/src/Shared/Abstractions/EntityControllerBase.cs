@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Ornit.Backend.src.Shared.ResultPattern;
 
 namespace Ornit.Backend.src.Shared.Abstractions;
@@ -8,7 +7,6 @@ namespace Ornit.Backend.src.Shared.Abstractions;
 [Route("api/[controller]")]
 public abstract class EntityControllerBase<T>(ILogger<EntityControllerBase<T>> logger, IRepository<T> repository) : ControllerBase where T : IIdentity
 {
-    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -25,7 +23,6 @@ public abstract class EntityControllerBase<T>(ILogger<EntityControllerBase<T>> l
         }
     }
 
-    [Authorize]
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {

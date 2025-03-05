@@ -8,11 +8,11 @@ namespace Ornit.Backend.src.Features.Test
     public class TestController : ControllerBase
     {
         [HttpDelete("{prm}")]
-        public IActionResult Deletee([FromBody] string bodyString, TestEnum testEnum) => Ok();
+        public ActionResult<TestClass> Deletee([FromBody] string bodyString, TestEnum testEnum) => Ok(new TestClass(bodyString, testEnum.ToString()));
 
         [HttpPatch("patch/{str}")]
         [Authorize]
-        public IActionResult Patch(string str) => Ok();
+        public IActionResult Patch(string str) => Ok(str);
 
         [HttpGet("get/extra/param")]
         public IActionResult Get() => Ok();

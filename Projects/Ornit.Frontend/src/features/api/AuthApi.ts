@@ -1,4 +1,4 @@
-import { AuthRequest } from "@/contenttypes";
+import { AuthRequest,  } from "@/contenttypes";
 
 
 export const authenticate = async (token: string) => {
@@ -17,10 +17,9 @@ export const authenticate = async (token: string) => {
 			throw new Error(errorMessage);
 		}
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
 		
+	} catch (error) {
+		throw new Error("Authenticate")
 	}
 };
 
@@ -40,10 +39,9 @@ export const refreshToken = async (refreshToken: string) => {
 			throw new Error(errorMessage);
 		}
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
 		
+	} catch (error) {
+		throw new Error("RefreshToken")
 	}
 };
 
@@ -63,10 +61,9 @@ export const login = async (request: AuthRequest) => {
 			throw new Error(errorMessage);
 		}
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
 		
+	} catch (error) {
+		throw new Error("Login")
 	}
 };
 
@@ -86,9 +83,8 @@ export const register = async (request: AuthRequest) => {
 			throw new Error(errorMessage);
 		}
 
-		const data = await response.json();
-		return data;
-	} catch (error) {
 		
+	} catch (error) {
+		throw new Error("Register")
 	}
 };
