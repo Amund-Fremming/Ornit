@@ -184,7 +184,9 @@ public static class TypeScriptClientGenerator
             ? ""
             : $"const data : {returnType} = await response.json();\nreturn data;";
 
-        var catchClauseConsoleLog = _clientLogging ? $"console.log(\"{method.Name} error: \" + error.message);" : $"throw new Error(\"{method.Name}\")";
+        var catchClauseConsoleLog = _clientLogging
+            ? $"console.log(\"{method.Name} -\", error);"
+            : $"throw new Error(\"{method.Name} \" + error)";
 
         return $$"""
 

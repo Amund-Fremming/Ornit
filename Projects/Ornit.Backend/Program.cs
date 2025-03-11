@@ -24,7 +24,7 @@ internal class Program
 
         services.AddTypeScriptSupport(options =>
         {
-            options.ClientLogging = false;
+            options.ClientLogging = true;
             options.RelativeFolderPath = "../Ornit.Frontend/src/features";
         });
 

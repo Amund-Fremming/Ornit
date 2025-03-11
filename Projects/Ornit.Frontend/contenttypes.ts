@@ -10,16 +10,6 @@ export interface UserEntity {
     email: string;
 }
 
-export interface TestClass {
-    prop1: string;
-    prop2: string;
-}
-
-export enum TestEnum {
-    One,
-    Two,
-    Three,
-}
 export interface Auth0LoginResponse {
     accessToken: string;
     refreshToken: string;

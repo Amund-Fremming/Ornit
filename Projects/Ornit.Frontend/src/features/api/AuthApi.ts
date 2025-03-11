@@ -19,7 +19,7 @@ export const authenticate = async (token: string) => {
 
 		
 	} catch (error) {
-		throw new Error("Authenticate")
+		console.log("Authenticate -", error);
 	}
 };
 
@@ -41,7 +41,7 @@ export const refreshToken = async (refreshToken: string) => {
 
 		
 	} catch (error) {
-		throw new Error("RefreshToken")
+		console.log("RefreshToken -", error);
 	}
 };
 
@@ -64,7 +64,7 @@ export const login = async (request: AuthRequest) => {
 		const data : Auth0LoginResponse = await response.json();
 return data;
 	} catch (error) {
-		throw new Error("Login")
+		console.log("Login -", error);
 	}
 };
 
@@ -86,6 +86,6 @@ export const register = async (request: AuthRequest) => {
 
 		
 	} catch (error) {
-		throw new Error("Register")
+		console.log("Register -", error);
 	}
 };

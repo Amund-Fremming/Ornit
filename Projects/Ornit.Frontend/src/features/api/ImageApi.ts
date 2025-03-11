@@ -20,6 +20,6 @@ export const uploadImage = async (form: File) => {
 		const data : number = await response.json();
 return data;
 	} catch (error) {
-		throw new Error("UploadImage")
+		console.log("UploadImage -", error);
 	}
 };

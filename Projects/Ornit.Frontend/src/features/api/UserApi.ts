@@ -19,6 +19,6 @@ export const get = async (param: string, srs: string[], token: string) => {
 
 		
 	} catch (error) {
-		throw new Error("Get")
+		console.log("Get -", error);
 	}
 };
