@@ -7,7 +7,7 @@ using Ornit.Backend.src.Shared.ResultPattern;
 namespace Ornit.Backend.src.Features.Auth0;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController(ILogger<AuthController> logger, IAuthService _authService, IUserRepository _userRepository) : ControllerBase
 {
     // Summary:
@@ -63,7 +63,7 @@ public class AuthController(ILogger<AuthController> logger, IAuthService _authSe
     //     Do NOT delete the service method.
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(AuthRequest request)
+    public async Task<ActionResult<Auth0LoginResponse>> Login(AuthRequest request)
     {
         try
         {

@@ -21,27 +21,20 @@ public static class TypeScriptClientGenerator
 
     public static void Generate(bool clientLogging, string relativePath)
     {
-        try
-        {
-            _clientLogging = clientLogging;
-            _relativePath = relativePath;
+        _clientLogging = clientLogging;
+        _relativePath = relativePath;
 
-            var controllerClasses = GetControllerClasses();
-            var textClients = controllerClasses
-                .Select(GetCustomMethods)
-                .Select(ToTextClient)
-                .ToList();
+        var controllerClasses = GetControllerClasses();
+        var textClients = controllerClasses
+            .Select(GetCustomMethods)
+            .Select(ToTextClient)
+            .ToList();
 
-            for (int i = 0; i < controllerClasses.Count(); i++)
-            {
-                var controllerName = controllerClasses.ElementAt(i).Name;
-                var textClient = textClients.ElementAt(i);
-                CreatedFile(controllerName, textClient);
-            }
-        }
-        catch (Exception)
+        for (int i = 0; i < controllerClasses.Count(); i++)
         {
-            throw;
+            var controllerName = controllerClasses.ElementAt(i).Name;
+            var textClient = textClients.ElementAt(i);
+            CreatedFile(controllerName, textClient);
         }
     }
 
@@ -56,38 +49,31 @@ public static class TypeScriptClientGenerator
 
     private static string ToTextClient(MethodInfo[] methodInfos)
     {
-        try
+        var tsImports = new StringBuilder();
+        var tsFunctions = new StringBuilder();
+        var customReturnTypes = new HashSet<string>();
+
+        tsImports.Append("import { ");
+        foreach (var method in methodInfos)
         {
-            var tsImports = new StringBuilder();
-            tsImports.Append("import { ");
-            var objects = new HashSet<string>();
+            customReturnTypes.Add(GetImportType(method));
+            var parameterTypes = GetParameterTypes(method.GetParameters());
+            customReturnTypes.UnionWith(parameterTypes);
 
-            var tsFunctions = new StringBuilder();
-            var customReturnTypes = new HashSet<string>();
-            foreach (var method in methodInfos)
-            {
-                customReturnTypes.Add(GetImportType(method));
-                var methodObjects = GetCustomObjects(method.GetParameters());
-                objects.UnionWith(methodObjects);
-
-                var clientMethodText = GetClientMethodString(method);
-                tsFunctions.AppendLine(clientMethodText);
-            }
-
-            objects.UnionWith(customReturnTypes);
-            var allTypes = string.Join(", ", objects);
-            tsImports.AppendLine($"{allTypes} }} from \"@/contenttypes\";" + "\n");
-            tsImports.Append(tsFunctions);
-
-            return tsImports.ToString();
+            var clientMethodText = GetClientMethodString(method);
+            tsFunctions.AppendLine(clientMethodText);
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        customReturnTypes.RemoveWhere(string.IsNullOrWhiteSpace);
+        var allTypes = string.Join(", ", customReturnTypes);
+
+        tsImports.AppendLine($"{allTypes} }} from \"@/contenttypes\";" + "\n");
+        tsImports.Append(tsFunctions);
+
+        return tsImports.ToString();
     }
 
-    private static HashSet<string> GetCustomObjects(ParameterInfo[] parameterInfos)
+    private static HashSet<string> GetParameterTypes(ParameterInfo[] parameterInfos)
     {
         var objects = new HashSet<string>();
         foreach (var param in parameterInfos)
@@ -127,9 +113,7 @@ public static class TypeScriptClientGenerator
     {
         var type = method.DeclaringType!;
 
-        var endpointTemplateBase = type.GetCustomAttribute<RouteAttribute>()?
-            .Template ?? "";
-
+        var endpointTemplateBase = type.GetCustomAttribute<RouteAttribute>()?.Template ?? "";
         var controllerName = type.Name.Replace("Controller", string.Empty);
         var endpointBase = endpointTemplateBase.Replace("[controller]", controllerName);
 
@@ -243,7 +227,7 @@ public static class TypeScriptClientGenerator
             param = param.GetGenericArguments()[0];
         }
 
-        if (param == typeof(IActionResult) || param == typeof(ActionResult<>))
+        if (param == typeof(IActionResult))
         {
             return string.Empty;
         }

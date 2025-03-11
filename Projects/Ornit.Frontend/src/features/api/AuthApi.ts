@@ -1,9 +1,9 @@
-import { AuthRequest,  } from "@/contenttypes";
+import { Auth0LoginResponse, AuthRequest } from "@/contenttypes";
 
 
 export const authenticate = async (token: string) => {
 	try {
-		const response = await fetch(`api/Auth/authenticate}`, {
+		const response = await fetch(`api/auth/authenticate}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const authenticate = async (token: string) => {
 
 export const refreshToken = async (refreshToken: string) => {
 	try {
-		const response = await fetch(`api/Auth/refresh-token}`, {
+		const response = await fetch(`api/auth/refresh-token}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -47,7 +47,7 @@ export const refreshToken = async (refreshToken: string) => {
 
 export const login = async (request: AuthRequest) => {
 	try {
-		const response = await fetch(`api/Auth/login}`, {
+		const response = await fetch(`api/auth/login}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -61,7 +61,8 @@ export const login = async (request: AuthRequest) => {
 			throw new Error(errorMessage);
 		}
 
-		
+		const data : Auth0LoginResponse = await response.json();
+return data;
 	} catch (error) {
 		throw new Error("Login")
 	}
@@ -69,7 +70,7 @@ export const login = async (request: AuthRequest) => {
 
 export const register = async (request: AuthRequest) => {
 	try {
-		const response = await fetch(`api/Auth/register}`, {
+		const response = await fetch(`api/auth/register}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
