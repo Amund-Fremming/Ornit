@@ -12,7 +12,6 @@ namespace Ornit.Backend.src.Shared.TypeScript;
  * TODO
  *
  * - Return some message when 200, 401, 403, 404 and 500 (Result pattern or TanStack)
- * - Handle get method return type when incomming task
  */
 
 public static class TypeScriptClientGenerator
@@ -67,7 +66,7 @@ public static class TypeScriptClientGenerator
             var customReturnTypes = new HashSet<string>();
             foreach (var method in methodInfos)
             {
-                customReturnTypes.Add(GetReturnType(method, true));
+                customReturnTypes.Add(GetImportType(method));
                 var methodObjects = GetCustomObjects(method.GetParameters());
                 objects.UnionWith(methodObjects);
 
@@ -196,7 +195,7 @@ public static class TypeScriptClientGenerator
         var authorization = needsAuth ? $"Authorization: `Bearer ${{token}}`" : "";
         var body = GetBody(method.GetParameters());
 
-        var returnType = GetReturnType(method, false);
+        var returnType = GetReturnType(method);
         var returnText = string.IsNullOrEmpty(returnType)
             ? ""
             : $"const data : {returnType} = await response.json();\nreturn data;";
@@ -229,13 +228,7 @@ public static class TypeScriptClientGenerator
 		""";
     }
 
-    /* Finnes en case
-     * - param er ActionResult
-     * - og har egen object
-     * - hvis den er wrappet i en taks
-     */
-
-    private static string GetReturnType(MethodInfo method, bool onlyCustomClasses)
+    private static string GetReturnType(MethodInfo method)
     {
         var returnType = method.ReturnType;
         if (!returnType.IsGenericType)
@@ -244,18 +237,49 @@ public static class TypeScriptClientGenerator
         }
 
         var param = returnType.GetGenericArguments()[0];
-        if (param == typeof(IActionResult) || param == typeof(ActionResult))
+
+        if (param.IsGenericType && param.GetGenericTypeDefinition() == typeof(ActionResult<>))
         {
-            return string.Empty;
+            param = param.GetGenericArguments()[0];
         }
 
-        if (onlyCustomClasses && !typeof(ITypeScriptModel).IsAssignableFrom(param))
+        if (param == typeof(IActionResult) || param == typeof(ActionResult<>))
         {
             return string.Empty;
         }
 
         var tsType = ToTypeScriptType(param);
         return tsType;
+    }
+
+    private static string GetImportType(MethodInfo method)
+    {
+        var returnType = method.ReturnType;
+        if (!returnType.IsGenericType)
+        {
+            return string.Empty;
+        }
+
+        var param = ExtractInnerGenericArgument(returnType);
+
+        if (!typeof(ITypeScriptModel).IsAssignableFrom(param))
+        {
+            return string.Empty;
+        }
+
+        var tsType = ToTypeScriptType(param).Replace("[]", string.Empty);
+        return tsType;
+    }
+
+    private static Type ExtractInnerGenericArgument(Type type)
+    {
+        if (!type.IsGenericType)
+        {
+            return type;
+        }
+
+        type = type.GetGenericArguments()[0];
+        return ExtractInnerGenericArgument(type);
     }
 
     private static string GetBody(ParameterInfo[] parameterInfos)

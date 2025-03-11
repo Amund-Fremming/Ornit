@@ -1,8 +1,8 @@
 import { TestEnum, TestClass } from "@/contenttypes";
 
-export const deletee = async (bodyString: string, testEnum: TestEnum) => {
+export const deletee = async (bodyString: string, prm: TestEnum) => {
   try {
-    const response = await fetch(`api/test/{prm}}`, {
+    const response = await fetch(`api/test/${prm}}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -15,7 +15,7 @@ export const deletee = async (bodyString: string, testEnum: TestEnum) => {
       throw new Error(errorMessage);
     }
 
-    const data: TestClass = await response.json();
+    const data: TestClass[] = await response.json();
     return data;
   } catch (error) {
     throw new Error("Deletee");
@@ -36,6 +36,9 @@ export const patch = async (str: string, token: string) => {
       const errorMessage = await response.json();
       throw new Error(errorMessage);
     }
+
+    const data: string = await response.json();
+    return data;
   } catch (error) {
     throw new Error("Patch");
   }
@@ -54,6 +57,9 @@ export const get = async () => {
       const errorMessage = await response.json();
       throw new Error(errorMessage);
     }
+
+    const data: number[] = await response.json();
+    return data;
   } catch (error) {
     throw new Error("Get");
   }

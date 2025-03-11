@@ -7,7 +7,7 @@
 /// <param name="Data">Generic data on sucess.</param>
 /// <param name="Message">Descriptive message if there is an the error.</param>
 /// <param name="Exception">Exception thrown, used maily for debugging.</param>
-public record Result<T>(T Data, Error Error) : IResult, IResult<T>
+public sealed record Result<T>(T Data, Error Error) : IResult, IResult<T>
 {
     /// <summary>
     /// Indicates if the operation failed or not.

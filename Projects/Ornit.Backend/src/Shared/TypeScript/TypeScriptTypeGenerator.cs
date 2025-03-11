@@ -49,7 +49,8 @@ public static class TypeScriptTypeGenerator
                 var tsType = ToTypeScriptType(property.PropertyType);
                 sb.AppendLine($"    {tsPropertyName}: {tsType};");
             }
-            sb.AppendLine($"{"}"}");
+
+            sb.AppendLine($"}}");
             sb.AppendLine();
         }
 

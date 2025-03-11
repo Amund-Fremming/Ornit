@@ -8,12 +8,12 @@ namespace Ornit.Backend.src.Features.Image
     public class ImageController(IImageHandler imageHandler) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile form)
+        public async Task<ActionResult<int>> UploadImage(IFormFile form)
         {
             var stream = form.OpenReadStream() as MemoryStream;
             await imageHandler.Upload(stream!, form.ContentType);
 
-            return Ok();
+            return Ok(1);
         }
     }
 }

@@ -17,7 +17,8 @@ export const uploadImage = async (form: File) => {
 			throw new Error(errorMessage);
 		}
 
-		
+		const data : number = await response.json();
+return data;
 	} catch (error) {
 		throw new Error("UploadImage")
 	}
